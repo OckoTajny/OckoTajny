@@ -97,7 +97,7 @@ def main() -> None:
         f'fill="{BG}" stroke="{BORDER}"/>'
     )
 
-    font = 'font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11"'
+    font = 'font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12"'
 
     # Month labels.
     prev = None

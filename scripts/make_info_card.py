@@ -43,12 +43,12 @@ LINES = [
 PALETTE = ["#484f58", "#ff7b72", "#3fb950", "#d29922",
            "#58a6ff", "#bc8cff", "#76e3ea", "#c9d1d9"]
 
-W = 640
-FONT = 13
-LH = 22
+W = 560
+FONT = 14
+LH = 23
 PAD = 22
 BAR_H = 34
-KEY_W = 86  # value column offset
+KEY_W = 96  # value column offset
 
 
 def esc(s: str) -> str:

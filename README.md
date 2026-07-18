@@ -1,15 +1,15 @@
 <div align="center">
 
 <h3><code>jachym@arch ~ $ ./contributions.sh</code></h3>
-<img src="./contrib-heatmap.svg" width="853" alt="Contribution heatmap" />
+<img src="./contrib-heatmap.svg" width="100%" alt="Contribution heatmap" />
 
 <br><br>
 
 <h3><code>jachym@arch ~ $ whoami</code></h3>
-<table>
+<table width="100%">
   <tr>
-    <td valign="top"><img src="./jachym-ascii.svg" width="370" alt="ASCII portrait of Jáchym Šolta" /></td>
-    <td valign="top"><img src="./info-card.svg" width="483" alt="neofetch-style info card" /></td>
+    <td width="43%" valign="top"><img src="./jachym-ascii.svg" width="100%" alt="ASCII portrait of Jáchym Šolta" /></td>
+    <td width="57%" valign="top"><img src="./info-card.svg" width="100%" alt="neofetch-style info card" /></td>
   </tr>
 </table>
 
