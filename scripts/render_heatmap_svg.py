@@ -83,12 +83,16 @@ def main() -> None:
         f'aria-label="{data["total"]} GitHub contributions in the last year">'
     )
     if not static:
+        # No opacity:0 on the classes themselves — renderers that ignore CSS
+        # animations (GitHub mobile app, rsvg, embed thumbnailers) must still
+        # see the finished graph. Animating browsers get the cascade via
+        # fill-mode:both, which applies the from-frame during each delay.
         svg.append(
             "<style>"
-            ".d{opacity:0;animation:drop .5s cubic-bezier(.2,.7,.3,1) both}"
+            ".d{animation:drop .5s cubic-bezier(.2,.7,.3,1) both}"
             "@keyframes drop{from{opacity:0;transform:translateY(-8px)}"
             "to{opacity:1;transform:none}}"
-            ".f{opacity:0;animation:fade .6s ease-out both}"
+            ".f{animation:fade .6s ease-out both}"
             "@keyframes fade{from{opacity:0}to{opacity:1}}"
             "</style>"
         )
