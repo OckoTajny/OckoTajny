@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Convert source-prepped.png into a self-typing ASCII portrait SVG.
 
-Each pixel of a downsampled grid picks a glyph from a density ramp — sparse
+Each pixel of a downsampled grid picks a glyph from a density ramp – sparse
 characters for bright areas, dense for dark. Two choices keep it clean:
 monochrome (one light-gray fill) and high contrast (background washed to
 white upstream, so it maps to the leading space and prints as nothing).
 
 Animation is pure SMIL: every row sits behind a horizontal clip that wipes
 left-to-right with a block cursor riding the edge, staggered top to bottom.
-Prints once, then freezes — GitHub plays SMIL inside <img>-embedded SVGs.
+Prints once, then freezes – GitHub plays SMIL inside <img>-embedded SVGs.
 
     python scripts/make_ascii_svg.py            # writes jachym-ascii.svg
     STATIC=1 python scripts/make_ascii_svg.py   # frozen frame for previews

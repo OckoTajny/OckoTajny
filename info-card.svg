@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="560" height="377" viewBox="0 0 560 377" role="img" aria-label="Jáchym Šolta — neofetch info card">
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="377" viewBox="0 0 560 377" role="img" aria-label="Jáchym Šolta – neofetch info card">
 <style>.ln{opacity:0;animation:in .45s ease-out both}@keyframes in{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}</style>
 <rect x="0.5" y="0.5" width="559" height="376" rx="12" fill="#0d1117" stroke="#30363d"/>
 <path d="M0.5 12 a12 12 0 0 1 12 -11.5 h535 a12 12 0 0 1 12 11.5 v22 h-559 z" fill="#161b22"/>

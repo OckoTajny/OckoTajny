@@ -3,7 +3,7 @@
 
 The heatmap already covers GitHub stats, so this card is for the story the
 numbers can't tell: role, stack, the rice. Each line fades and slides in on a
-short stagger (CSS keyframes inside the SVG — GitHub plays them in <img>),
+short stagger (CSS keyframes inside the SVG – GitHub plays them in <img>),
 prints once, then stays.
 
     python scripts/make_info_card.py            # writes info-card.svg
@@ -24,7 +24,7 @@ GREEN = "#3fb950"
 BLUE = "#58a6ff"
 CYAN = "#76e3ea"
 
-# (key, value) — key rendered in green, value in ink. None = separator rule.
+# (key, value) – key rendered in green, value in ink. None = separator rule.
 LINES = [
     ("jachym@arch", None),
     (None, None),
@@ -63,7 +63,7 @@ def main() -> None:
     svg = []
     svg.append(
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{height}" '
-        f'viewBox="0 0 {W} {height}" role="img" aria-label="Jáchym Šolta — neofetch info card">'
+        f'viewBox="0 0 {W} {height}" role="img" aria-label="Jáchym Šolta – neofetch info card">'
     )
 
     if not static:

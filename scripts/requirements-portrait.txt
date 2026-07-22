@@ -1,4 +1,4 @@
-# Portrait-only deps. Heavy (onnxruntime model download) — install locally,
+# Portrait-only deps. Heavy (onnxruntime model download) – install locally,
 # only when regenerating the ASCII portrait from a new photo.
 pillow
 numpy

@@ -3,11 +3,11 @@
 
 A flatly-lit photo converts to a dark, unreadable blob. Three steps fix that:
 
-1. Remove the background so only the subject survives — rembg (u2net) by
+1. Remove the background so only the subject survives – rembg (u2net) by
    default, with an OpenCV GrabCut fallback for offline environments where
    the u2net model can't be downloaded.
 2. Boost local contrast with CLAHE so the face gets real highlights/shadows.
-3. Composite onto pure white — white maps to the blank end of the ASCII ramp,
+3. Composite onto pure white – white maps to the blank end of the ASCII ramp,
    so the background prints as nothing.
 
 Run once per photo (the daily workflow never touches this):
@@ -80,7 +80,7 @@ def main() -> None:
 
     gray = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2GRAY)
 
-    # 2. CLAHE — local contrast so a flat face gets usable tonal range.
+    # 2. CLAHE – local contrast so a flat face gets usable tonal range.
     clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
     gray = clahe.apply(gray)
 

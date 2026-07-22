@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Fetch the real contribution calendar — no token, no GraphQL.
+"""Fetch the real contribution calendar – no token, no GraphQL.
 
 GitHub serves every user's contribution calendar as public HTML at
-https://github.com/users/<username>/contributions — the same fragment the
+https://github.com/users/<username>/contributions – the same fragment the
 profile page itself embeds. We fetch it with requests, parse the day cells
 with BeautifulSoup, and write data/contributions.json with the raw days plus
 derived stats (streaks, best day, monthly totals).
@@ -47,7 +47,7 @@ def parse_days(html: str) -> list[dict]:
 
     if not days:
         raise SystemExit(
-            "no ContributionCalendar-day cells found — GitHub may have changed "
+            "no ContributionCalendar-day cells found – GitHub may have changed "
             "the markup; inspect the fetched HTML and update parse_days()."
         )
     return sorted(days, key=lambda d: d["date"])

@@ -1,22 +1,22 @@
-# Animated GitHub profile — how it works
+# Animated GitHub profile – how it works
 
-This is the **profile repo** — the magic repo whose `README.md` renders on top
+This is the **profile repo** – the magic repo whose `README.md` renders on top
 of the profile page at [github.com/OckoTajny](https://github.com/OckoTajny).
 It was generated in `OckoTajny/jachym-portfolio` (branch
 `claude/animated-github-profile-lzowyp`, folder `github-profile/`) and copied
 here.
 
 Built after [How I Built an Animated GitHub Profile README](https://avivashishta.com)
-— ASCII portrait + neofetch card + live contribution graph, all animated SVG,
+– ASCII portrait + neofetch card + live contribution graph, all animated SVG,
 no JavaScript, no tokens, no third-party stats services.
 
 ## What's here
 
 | File | What it is |
 | --- | --- |
-| `README.md` | The profile README — terminal layout placing the three SVGs |
+| `README.md` | The profile README – terminal layout placing the three SVGs |
 | `jachym-ascii.svg` | Self-typing monochrome ASCII portrait (SMIL row-wipe + cursor) |
-| `info-card.svg` | neofetch-style card — role, stack, rice (CSS line stagger) |
+| `info-card.svg` | neofetch-style card – role, stack, rice (CSS line stagger) |
 | `contrib-heatmap.svg` | 53-week contribution calendar, diagonal reveal + stats footer |
 | `data/contributions.json` | Raw calendar days + derived streak/best-day stats |
 | `source-prepped.png` | Intermediate: background-removed, CLAHE'd grayscale photo |
@@ -56,7 +56,7 @@ python scripts/make_ascii_svg.py
 ```
 
 `STATIC=1` before `make_ascii_svg.py`, `make_info_card.py` or
-`render_heatmap_svg.py` emits a frozen final frame (handy for Quick Look —
+`render_heatmap_svg.py` emits a frozen final frame (handy for Quick Look –
 some preview apps don't play SMIL/CSS animations).
 
 ## Why this works on GitHub

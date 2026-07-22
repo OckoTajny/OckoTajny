@@ -3,7 +3,7 @@
 
 The classic calendar of rounded boxes on a GitHub-ish green ramp, revealed
 once with a diagonal line-after-line slide-down (CSS keyframes that play on
-load and freeze — no looping glow), plus a Less→More legend and a stats
+load and freeze – no looping glow), plus a Less→More legend and a stats
 footer. Output: contrib-heatmap.svg.
 
     python scripts/render_heatmap_svg.py
@@ -50,7 +50,7 @@ def main() -> None:
 
     best = data["best_day"]["count"]
     # Neon top end: only standout days get level 5, and only once the account
-    # has real volume — otherwise stick to GitHub's own 0–4 levels.
+    # has real volume – otherwise stick to GitHub's own 0–4 levels.
     neon_min = max(15, round(best * 0.8)) if best >= 10 else None
 
     cells = []
@@ -83,7 +83,7 @@ def main() -> None:
         f'aria-label="{data["total"]} GitHub contributions in the last year">'
     )
     if not static:
-        # No opacity:0 on the classes themselves — renderers that ignore CSS
+        # No opacity:0 on the classes themselves – renderers that ignore CSS
         # animations (GitHub mobile app, rsvg, embed thumbnailers) must still
         # see the finished graph. Animating browsers get the cascade via
         # fill-mode:both, which applies the from-frame during each delay.
