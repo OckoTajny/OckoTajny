@@ -1,13 +1,13 @@
 {
   "username": "OckoTajny",
-  "fetched_at": "2026-08-26T07:06:52+00:00",
-  "total": 1100,
+  "fetched_at": "2026-08-27T17:36:23+00:00",
+  "total": 1102,
   "best_day": {
     "date": "2026-07-22",
     "count": 69
   },
-  "current_streak": 41,
-  "longest_streak": 41,
+  "current_streak": 43,
+  "longest_streak": 43,
   "monthly": {
     "2025-08": 0,
     "2025-09": 99,
@@ -21,7 +21,7 @@
     "2026-05": 78,
     "2026-06": 126,
     "2026-07": 220,
-    "2026-08": 82
+    "2026-08": 84
   },
   "days": [
     {
@@ -1861,8 +1861,13 @@
     },
     {
       "date": "2026-08-26",
-      "count": 0,
-      "level": 0
+      "count": 1,
+      "level": 1
+    },
+    {
+      "date": "2026-08-27",
+      "count": 1,
+      "level": 1
     }
   ]
 }
