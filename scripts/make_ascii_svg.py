@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Convert source-prepped.png into a self-typing ASCII portrait SVG.
+"""Convert source-prepped.png into a self-typing colour ASCII portrait SVG.
 
-Each pixel of a downsampled, sharpened grid picks a glyph from a density
-ramp – sparse characters for bright areas, dense for dark. Colour comes from a
-diagonal cyan -> blue -> purple -> coral gradient (the info card's accents),
-dimmed per glyph by density so shading reads twice. The background is washed
-to white upstream; it is flood-filled from the border here and prints as
-nothing, while everything inside the silhouette gets at least a dot.
+source-prepped.png is RGBA (see prep_photo.py): transparent pixels print as
+nothing. Every other cell of a downsampled, sharpened grid picks a glyph
+from a density ramp by brightness – on the dark terminal, bright areas (skin,
+shirt, headphones) get dense glyphs, dark ones (hair, laptop) a lighter
+texture – and is drawn in the photo's own colour for that cell, lifted and
+saturated a bit so dark tones still read on #0d1117.
 
 Animation is pure SMIL: every row sits behind a horizontal clip that wipes
 left-to-right with a block cursor riding the edge, staggered top to bottom.
@@ -16,39 +16,36 @@ Prints once, then freezes – GitHub plays SMIL inside <img>-embedded SVGs.
     STATIC=1 python scripts/make_ascii_svg.py   # frozen frame for previews
 """
 
+import colorsys
 import os
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageOps
+from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "source-prepped.png"
 OUT = ROOT / "jachym-ascii.svg"
 
-# bright (sparse) -> dark (dense); the leading space clears the background
+# sparse -> dense; index 0 (space) is reserved for the transparent background
 RAMP = " .`'-:;~=+*cxsoO#%&@"
-GAMMA = 1.2  # >1 darkens midtones so the face gets denser glyphs
-BLUR = 1.2      # px, pre-downsample grain removal
-SHARPEN = 120   # unsharp % at grid size
-BG_WHITE = 250  # source pixels this bright and connected to the border = background
+GAMMA = 0.85    # <1 pushes midtones up the ramp so the subject reads solid
+MIN_GLYPH = 11   # densest-floor inside the silhouette, so it never has holes
+SHARPEN = 110   # unsharp % at grid size
 
-COLS = 110
-FONT_SIZE = 11
-CW = 6.5   # advance width forced via textLength
-CH = 11    # line height
+COLS = 144
+FONT_SIZE = 8.5
+CW = 5.0   # advance width forced via textLength
+CH = 8.5    # line height
 
 PAD = 18
 BG = "#0d1117"
 BORDER = "#30363d"
 CURSOR = "#c9d1d9"
 
-# Diagonal hue gradient (top-left -> bottom-right), same accents as the info
-# card: cyan -> blue -> purple -> coral. Each glyph's colour is then dimmed by
-# how sparse it is, so shading reads in brightness as well as density.
-STOPS = ["#76e3ea", "#58a6ff", "#bc8cff", "#ff7b72"]
-HUE_STEPS = 24   # quantisation keeps adjacent glyphs in shared <tspan> runs
-LUM_STEPS = 5
-DIM_FLOOR = 0.45  # brightness of the sparsest glyph relative to full colour
+# Colour treatment on a dark background (HSV value/saturation, 0..1).
+MIN_V = 0.12     # lift near-black (hair, laptop) so it is visible at all
+SAT_BOOST = 1.5
+Q = 12           # per-channel quantisation step; keeps <tspan> runs long
 
 ROW_STAGGER = 0.035  # s between row starts
 ROW_DUR = 0.5        # s for one row wipe
@@ -59,87 +56,67 @@ def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-def hex_rgb(h: str) -> tuple[int, int, int]:
-    return tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))
-
-
-def gradient(t: float) -> tuple[float, float, float]:
-    stops = [hex_rgb(h) for h in STOPS]
-    t = min(max(t, 0.0), 1.0) * (len(stops) - 1)
-    i = min(int(t), len(stops) - 2)
-    f = t - i
-    return tuple(a + (b - a) * f for a, b in zip(stops[i], stops[i + 1]))
-
-
-def colour(hue_q: int, lum_q: int) -> str:
-    base = hex_rgb(BG)
-    rgb = gradient(hue_q / (HUE_STEPS - 1))
-    k = DIM_FLOOR + (1 - DIM_FLOOR) * lum_q / (LUM_STEPS - 1)
-    return "#%02x%02x%02x" % tuple(round(b + (c - b) * k) for b, c in zip(base, rgb))
+def tint(r: float, g: float, b: float) -> str:
+    h, sat, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+    sat = min(1.0, sat * SAT_BOOST)
+    v = MIN_V + (1 - MIN_V) * v
+    rgb = colorsys.hsv_to_rgb(h, sat, v)
+    return "#%02x%02x%02x" % tuple(min(255, round(c * 255 / Q) * Q) for c in rgb)
 
 
 def main() -> None:
     static = os.environ.get("STATIC") == "1"
 
-    src = Image.open(SRC).convert("L")
-
-    # Subject mask: flood the washed-white background in from the border, so
-    # only that (not white highlights inside the subject) prints as nothing.
-    bg = src.point(lambda v: 255 if v >= BG_WHITE else 0)
-    for x, y in [(0, 0), (bg.width - 1, 0), (0, bg.height - 1), (bg.width - 1, bg.height - 1)]:
-        if bg.getpixel((x, y)) == 255:
-            ImageDraw.floodfill(bg, (x, y), 128)
-    subject = bg.point(lambda v: 0 if v == 128 else 255)
-
-    # Crop to the subject so every column carries detail, not empty margin.
-    box = subject.getbbox()
-    src, subject = src.crop(box), subject.crop(box)
+    src = Image.open(SRC).convert("RGBA")
+    src = src.crop(src.getchannel("A").point(lambda a: 255 if a >= 128 else 0).getbbox())
     rows = round(src.height / src.width * COLS * (CW / CH))
 
-    # Knock down the photo grain, and paint the background mid-grey so edge
-    # cells average subject tones instead of bleaching towards white.
-    src = src.filter(ImageFilter.GaussianBlur(BLUR))
-    img = Image.composite(src, Image.new("L", src.size, 128), subject)
-    img = img.resize((COLS, rows), Image.LANCZOS)
-    mask = subject.resize((COLS, rows), Image.BOX).point(lambda v: 255 if v >= 128 else 0)
-    # Sharpen at the target grid so eyes, hair and the collar survive the
-    # downsample, then stretch levels over the subject only.
-    img = img.filter(ImageFilter.UnsharpMask(radius=1.0, percent=SHARPEN, threshold=3))
-    img = ImageOps.autocontrast(img, cutoff=2, mask=mask)
-    px, mk = img.load(), mask.load()
+    # Premultiply onto black before downsampling so edge cells don't pick up
+    # whatever colour the matte hid, then un-premultiply per cell.
+    alpha = src.getchannel("A")
+    rgb = Image.composite(src.convert("RGB"), Image.new("RGB", src.size), alpha)
+    rgb = rgb.resize((COLS, rows), Image.BOX)
+    alpha = alpha.resize((COLS, rows), Image.BOX)
+    # Sharpen at the target grid so eyes, the headphone band and the collar
+    # survive the downsample.
+    rgb = rgb.filter(ImageFilter.UnsharpMask(radius=1.0, percent=SHARPEN, threshold=3))
+    cpx, apx = rgb.load(), alpha.load()
+
+    # Stretch brightness over the subject only (1st..99th percentile).
+    lum = {}
+    for r in range(rows):
+        for c in range(COLS):
+            a = apx[c, r]
+            if a >= 128:
+                R, G, B = (v * 255 / a for v in cpx[c, r])
+                lum[c, r] = (0.299 * R + 0.587 * G + 0.114 * B, (R, G, B))
+    ls = sorted(v for v, _ in lum.values())
+    lo, hi = ls[len(ls) // 100], ls[-len(ls) // 100 - 1]
 
     grid_w = COLS * CW
     width = grid_w + 2 * PAD
     height = rows * CH + 2 * PAD
 
     # Each line is a list of (colour, text) runs; trailing blanks dropped.
-    lines = []
     n = len(RAMP) - 1
+    lines = []
     for r in range(rows):
         cells = []
         for c in range(COLS):
-            if mk[c, r] < 128:
-                cells.append(0)
+            if (c, r) not in lum:
+                cells.append((0, None))
                 continue
-            # Dark (hair, laptop) -> dense, light (skin, shirt) -> sparse, but
-            # never blank inside the subject so the silhouette stays solid.
-            v = (px[c, r] / 255) ** GAMMA
-            cells.append(1 + round((1 - v) * (n - 1)))
-        while cells and cells[-1] == 0:
+            v, col = lum[c, r]
+            v = min(max((v - lo) / (hi - lo), 0.0), 1.0) ** GAMMA
+            cells.append((MIN_GLYPH + round(v * (n - MIN_GLYPH)), tint(*col)))
+        while cells and cells[-1][0] == 0:
             cells.pop()
         runs = []
-        for c, idx in enumerate(cells):
+        for idx, fill in cells:
             ch = RAMP[idx]
-            if idx == 0:
-                fill = None
-            else:
-                t = 0.7 * r / max(rows - 1, 1) + 0.3 * c / (COLS - 1)
-                hue_q = round(t * (HUE_STEPS - 1))
-                lum_q = round(idx / n * (LUM_STEPS - 1))
-                fill = colour(hue_q, lum_q)
-            if runs and (fill is None or runs[-1][0] == fill or runs[-1][0] is None):
-                prev_fill, text = runs[-1]
-                runs[-1] = (prev_fill if fill is None else fill, text + ch)
+            if runs and (fill is None or runs[-1][0] in (fill, None)):
+                prev, text = runs[-1]
+                runs[-1] = (prev if fill is None else fill, text + ch)
             else:
                 runs.append((fill, ch))
         lines.append(runs)
@@ -161,7 +138,7 @@ def main() -> None:
                 continue
             t = START + r * ROW_STAGGER
             svg.append(
-                f'<clipPath id="c{r}"><rect x="{PAD}" y="{PAD + r * CH}" width="0" height="{CH}">'
+                f'<clipPath id="c{r}"><rect x="{PAD}" y="{PAD + r * CH:.1f}" width="0" height="{CH}">'
                 f'<animate attributeName="width" from="0" to="{grid_w:.0f}" '
                 f'begin="{t:.2f}s" dur="{ROW_DUR}s" fill="freeze"/></rect></clipPath>'
             )
@@ -179,7 +156,7 @@ def main() -> None:
         spans = "".join(f'<tspan fill="{f}">{esc(t)}</tspan>' for f, t in runs)
         # textLength pins the advance width so the grid stays aligned in any font.
         svg.append(
-            f'<text x="{PAD}" y="{PAD + (r + 1) * CH - 2}" xml:space="preserve" '
+            f'<text x="{PAD}" y="{PAD + (r + 1) * CH - 1.8:.1f}" xml:space="preserve" '
             f'textLength="{length * CW:.1f}" lengthAdjust="spacingAndGlyphs"{clip}>{spans}</text>'
         )
     svg.append("</g>")
@@ -191,7 +168,7 @@ def main() -> None:
             t = START + r * ROW_STAGGER
             end = t + ROW_DUR
             svg.append(
-                f'<rect x="{PAD}" y="{PAD + r * CH + 1}" width="{CW:.1f}" height="{CH - 2}" '
+                f'<rect x="{PAD}" y="{PAD + r * CH + 1:.1f}" width="{CW:.1f}" height="{CH - 2:.1f}" '
                 f'fill="{CURSOR}" opacity="0">'
                 f'<set attributeName="opacity" to="0.9" begin="{t:.2f}s"/>'
                 f'<animate attributeName="x" from="{PAD}" to="{PAD + grid_w:.1f}" '
