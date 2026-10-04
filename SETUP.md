@@ -7,7 +7,7 @@ It was generated in `OckoTajny/jachym-portfolio` (branch
 here.
 
 Built after [How I Built an Animated GitHub Profile README](https://avivashishta.com)
-– ASCII portrait + neofetch card + live contribution graph, all animated SVG,
+– colour ASCII portrait + neofetch card + live contribution graph, all animated SVG,
 no JavaScript, no tokens, no third-party stats services.
 
 ## What's here
@@ -15,11 +15,11 @@ no JavaScript, no tokens, no third-party stats services.
 | File | What it is |
 | --- | --- |
 | `README.md` | The profile README – terminal layout placing the three SVGs |
-| `jachym-ascii.svg` | Self-typing monochrome ASCII portrait (SMIL row-wipe + cursor) |
+| `jachym-ascii.svg` | Self-typing ASCII portrait in the photo's own colours (SMIL row-wipe + cursor) |
 | `info-card.svg` | neofetch-style card – role, stack, rice (CSS line stagger) |
 | `contrib-heatmap.svg` | 53-week contribution calendar, diagonal reveal + stats footer |
 | `data/contributions.json` | Raw calendar days + derived streak/best-day stats |
-| `source-prepped.png` | Intermediate: background-removed, CLAHE'd grayscale photo |
+| `source-prepped.png` | Intermediate: background-removed, CLAHE'd colour photo (RGBA matte) |
 | `scripts/` | The five generators (see below) |
 | `.github/workflows/update-profile-art.yml` | Daily cron that re-scrapes + re-renders the heatmap |
 
@@ -51,7 +51,9 @@ python scripts/make_info_card.py
 
 # Portrait (only when the photo changes):
 pip install -r scripts/requirements-portrait.txt
-python scripts/prep_photo.py photo.jpg --crop X Y W H   # rembg; --engine grabcut = offline fallback
+# photo = jachym-portfolio/public/jachym_profil.jpg; --erase drops the bag
+python scripts/prep_photo.py photo.jpg --crop 640 345 740 640 --erase 0 574 240 66
+#   (rembg isnet-general-use; --engine grabcut = offline fallback)
 python scripts/make_ascii_svg.py
 ```
 
