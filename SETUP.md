@@ -7,7 +7,7 @@ It was generated in `OckoTajny/jachym-portfolio` (branch
 here.
 
 Built after [How I Built an Animated GitHub Profile README](https://avivashishta.com)
-– ASCII portrait + neofetch card + live contribution graph, all animated SVG,
+– colour ASCII portrait + neofetch card + live contribution graph, all animated SVG,
 no JavaScript, no tokens, no third-party stats services.
 
 ## What's here
@@ -15,7 +15,7 @@ no JavaScript, no tokens, no third-party stats services.
 | File | What it is |
 | --- | --- |
 | `README.md` | The profile README – terminal layout placing the three SVGs |
-| `jachym-ascii.svg` | Self-typing monochrome ASCII portrait (SMIL row-wipe + cursor) |
+| `jachym-ascii.svg` | Self-typing ASCII portrait, cyan→purple→coral gradient (SMIL row-wipe + cursor) |
 | `info-card.svg` | neofetch-style card – role, stack, rice (CSS line stagger) |
 | `contrib-heatmap.svg` | 53-week contribution calendar, diagonal reveal + stats footer |
 | `data/contributions.json` | Raw calendar days + derived streak/best-day stats |
