@@ -11,7 +11,7 @@
 <g class="ln" style="animation-delay:0.35s"><text x="22" y="70" fill="#76e3ea" font-weight="bold"><tspan fill="#3fb950">jachym</tspan><tspan fill="#8b949e">@</tspan><tspan fill="#58a6ff">arch</tspan></text></g>
 <g class="ln" style="animation-delay:0.48s"><line x1="22" y1="89" x2="118" y2="89" stroke="#8b949e" stroke-dasharray="2 2"/></g>
 <g class="ln" style="animation-delay:0.61s"><text x="22" y="116" fill="#3fb950" font-weight="bold">OS:</text><text x="118" y="116" fill="#c9d1d9">Arch Linux x86_64</text></g>
-<g class="ln" style="animation-delay:0.74s"><text x="22" y="139" fill="#3fb950" font-weight="bold">WM:</text><text x="118" y="139" fill="#c9d1d9">Hyprland (Wayland)</text></g>
+<g class="ln" style="animation-delay:0.74s"><text x="22" y="139" fill="#3fb950" font-weight="bold">WM:</text><text x="118" y="139" fill="#c9d1d9">i3 (X11)</text></g>
 <g class="ln" style="animation-delay:0.87s"><text x="22" y="162" fill="#3fb950" font-weight="bold">Role:</text><text x="118" y="162" fill="#c9d1d9">Full-Stack Developer @ djt-group</text></g>
 <g class="ln" style="animation-delay:1.00s"><text x="22" y="185" fill="#3fb950" font-weight="bold">Location:</text><text x="118" y="185" fill="#c9d1d9">Czech Republic</text></g>
 <g class="ln" style="animation-delay:1.13s"><text x="22" y="208" fill="#3fb950" font-weight="bold">Now:</text><text x="118" y="208" fill="#c9d1d9">Scalable, high-performance web apps</text></g>
