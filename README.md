@@ -17,7 +17,7 @@
 
 <h3><code>jachym@arch ~ $ ls ~/links</code></h3>
 
-<a href="https://jachym.djt-group.com"><code>portfolio/</code></a>&nbsp;&nbsp;
+<a href="https://www.solta.tech"><code>portfolio/</code></a>&nbsp;&nbsp;
 <a href="https://github.com/OckoTajny/dotfiles"><code>dotfiles/</code></a>&nbsp;&nbsp;
 <a href="https://www.linkedin.com/in/OckoTajny"><code>linkedin/</code></a>&nbsp;&nbsp;
 <a href="https://djt-group.com"><code>djt-group/</code></a>
